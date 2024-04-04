@@ -1,0 +1,6 @@
+@newbuy_HostAddress = http://localhost:5255
+
+GET {{newbuy_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
