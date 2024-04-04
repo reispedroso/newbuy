@@ -1,0 +1,46 @@
+# Ignore build output
+bin/
+obj/
+
+# Ignore NuGet packages
+*.nupkg
+*.snupkg
+packages/
+
+# Ignore user-specific files
+*.suo
+*.user
+*.userprefs
+*.vscode/
+.vs/
+
+# Ignore build and publish artifacts
+*.dll
+*.exe
+*.pdb
+*.dll.config
+*.json
+*.xml
+*.csproj.user
+*.bak
+
+# Ignore logs and temporary files
+*.log
+*.swp
+*.tmp
+
+# Ignore Visual Studio files
+*.sln
+*.sln.DotSettings
+*.sln.DotSettings.user
+*.csproj.DotSettings
+*.csproj.DotSettings.user
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore JetBrains Rider files
+.idea/
+*.iml
+*.ipr
+*.iws
