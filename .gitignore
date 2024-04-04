@@ -13,6 +13,7 @@ packages/
 *.userprefs
 *.vscode/
 .vs/
+*Migrations
 
 # Ignore build and publish artifacts
 *.dll
