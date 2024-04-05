@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using newbuy.App.Services;
 using newbuy.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddSingleton<PasswordHash>();
+builder.Services.AddSingleton<DateTimeCorrection>();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
