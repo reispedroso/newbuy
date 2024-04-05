@@ -14,7 +14,7 @@ packages/
 *.vscode/
 .vs/
 *Migrations
-
+src/App/Settings.cs
 # Ignore build and publish artifacts
 *.dll
 *.exe

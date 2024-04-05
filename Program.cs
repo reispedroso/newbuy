@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using newbuy.App.Services;
+using newbuy.Domain.Interfaces;
 using newbuy.Infrastructure.Data;
+using newbuy.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<PasswordHash>();
 builder.Services.AddSingleton<DateTimeCorrection>();
+
+builder.Services.AddScoped<UserInterface, UserRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

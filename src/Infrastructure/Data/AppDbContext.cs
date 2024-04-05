@@ -8,6 +8,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<User> Users { get; set; }
     public DbSet<UserType> UserType { get; set; }
+    public DbSet<Item> Items { get; set; }
+    public DbSet<ItemType> ItemType { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,9 +21,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 
         modelBuilder.Entity<User>()
             .HasOne(u => u.UserType)
-            .WithMany() 
+            .WithMany()
             .HasForeignKey(u => u.UserTypeId);
 
+        modelBuilder.Entity<Item>()
+                    .Property(u => u.ItemTypeId)
+                    .HasColumnName("ItemTypeId");
+
+        modelBuilder.Entity<Item>()
+            .HasOne(u => u.ItemType)
+            .WithMany()
+            .HasForeignKey(u => u.ItemTypeId);
 
     }
 
