@@ -14,6 +14,7 @@ builder.Services.AddSingleton<PasswordHash>();
 builder.Services.AddSingleton<DateTimeCorrection>();
 
 builder.Services.AddScoped<IUserInterface, UserRepository>();
+builder.Services.AddScoped<IProductInterface, ProductRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

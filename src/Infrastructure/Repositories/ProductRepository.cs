@@ -1,9 +1,10 @@
+using Microsoft.EntityFrameworkCore;
 using newbuy.App.Services;
 using newbuy.Domain.Interfaces;
 using newbuy.Domain.Models;
 using newbuy.Infrastructure.Data;
 
-namespace newbuy.Repositories;
+namespace newbuy.Infrastructure.Repositories;
 
 public class ProductRepository(AppDbContext context) : IProductInterface
 {
@@ -26,5 +27,79 @@ public class ProductRepository(AppDbContext context) : IProductInterface
         return newProduct;
     }
 
-    
+    public async Task<Product> GetProductById(Guid id)
+    {
+        if(id == Guid.Empty) { throw new Exception("Id is empty"); }
+
+        Product productById = await _context.Product.FirstOrDefaultAsync(p => p.Id == id)
+        ?? throw new Exception($"Product with id: {id} - not found");
+
+        return productById;
+    }
+
+    public async Task<Product> GetProductByName(string name)
+    {
+        if(string.IsNullOrEmpty(name)) { throw new Exception("Name is empty"); }
+
+        Product productByName = await _context.Product.FirstOrDefaultAsync(p => p.Name == name)
+        ?? throw new Exception($"Product with name: {name} - not found");
+
+        return productByName;
+    }
+
+    public async Task<List<Product>> GetAllProducts()
+    {
+        List<Product> products = await _context.Product.ToListAsync() ?? throw new Exception("No products found");
+
+        return products;
+    }
+
+    public async  Task<List<Product>> GetProductsByTypeId(Guid typeId)
+    {
+        if(typeId == Guid.Empty) { throw new Exception("Type Id is empty"); }
+
+        List<Product> productsByTypeId = await _context.Product.Where(p => p.ProductTypeId == typeId).ToListAsync()
+        ?? throw new Exception($"Products with type id: {typeId} - not found");
+
+        return productsByTypeId;
+    }
+
+    public async Task<List<Product>> GetProductsByNameType(string typeName)
+    {
+        if(string.IsNullOrEmpty(typeName)) { throw new Exception("Type name is empty"); }
+
+        List<Product> productsByNameType = await _context.Product.Where(p => p.ProductType!.TypeName == typeName).ToListAsync()
+        ?? throw new Exception($"Products with type name: {typeName} - not found");
+
+        return productsByNameType;
+    }
+
+    public async Task<bool> UpdateProduct(Product product)
+    {
+        if(product == null) { throw new Exception("Product is null"); }
+
+        Product productToUpdate = await GetProductById(product.Id);
+
+        productToUpdate.Name = product.Name;
+        productToUpdate.ProductTypeId = product.ProductTypeId;
+        productToUpdate.UpdatedAt = timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
+
+        _context.Product.Update(productToUpdate);
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteProduct(Guid id)
+    {
+        if(id == Guid.Empty) { throw new Exception("Id is empty"); }
+
+        Product productToDelete = await GetProductById(id);
+
+        productToDelete.DeletedAt = timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 }
