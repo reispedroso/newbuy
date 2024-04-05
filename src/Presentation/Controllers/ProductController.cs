@@ -22,4 +22,6 @@ namespace newbuy.Presentations.Controllers;
             return BadRequest(ex.Message);
         }
     }
+    
+    
 }

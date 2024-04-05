@@ -9,7 +9,7 @@ namespace newbuy.Infrastructure.Repositories;
 public class ProductRepository(AppDbContext context) : IProductInterface
 {
     private readonly AppDbContext _context = context;
-    private readonly DateTimeCorrection timeCorrection = new();
+    private readonly DateTimeCorrection _timeCorrection = new();
     public async Task<Product> AddProductToDb(Product product)
     {
         if (product == null) { throw new Exception("Product is null"); }
@@ -18,7 +18,7 @@ public class ProductRepository(AppDbContext context) : IProductInterface
             Id = Guid.NewGuid(),
             Name = product.Name,
             ProductTypeId = product.ProductTypeId,
-            CreatedAt = timeCorrection.GetCorrectedDateTime(DateTime.UtcNow)
+            CreatedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow)
         };
 
         await _context.Product.AddAsync(newProduct);
@@ -82,7 +82,7 @@ public class ProductRepository(AppDbContext context) : IProductInterface
 
         productToUpdate.Name = product.Name;
         productToUpdate.ProductTypeId = product.ProductTypeId;
-        productToUpdate.UpdatedAt = timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
+        productToUpdate.UpdatedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
 
         _context.Product.Update(productToUpdate);
         await _context.SaveChangesAsync();
@@ -96,7 +96,7 @@ public class ProductRepository(AppDbContext context) : IProductInterface
 
         Product productToDelete = await GetProductById(id);
 
-        productToDelete.DeletedAt = timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
+        productToDelete.DeletedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
 
         await _context.SaveChangesAsync();
 

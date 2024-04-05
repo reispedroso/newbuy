@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-
 using Microsoft.AspNetCore.Authorization;
+using newbuy.App.Services;
 using newbuy.Domain.Models;
 using newbuy.Domain.Interfaces;
 
@@ -27,30 +27,36 @@ public class UserController(IUserInterface userRepository) : ControllerBase
     }
 
     [HttpPost("getuserbyid/{id}")]
-    
     public async Task<IActionResult> GetUserById(Guid id)
     {
         var user = await _userRepository.GetUserById(id);
-       
+
         return Ok(user);
     }
 
     [HttpPost("getallusers")]
-   
     public async Task<IActionResult> GetAllUsers()
     {
         IEnumerable<User> users = await _userRepository.GetAllUsers();
-       
+
         return Ok(users);
     }
+
     [HttpPost("updateuser/{id}")]
-   
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] User user)
     {
-       
         await _userRepository.UpdateUser(id, user);
         return Ok();
     }
+
+    [HttpPost("generatetoken")]
+    public async Task<ActionResult<dynamic>> GenerateUserToken([FromBody] User user)
+    {
+        var authUser = await _userRepository.AuthenticateUser(user.Email, user.Password) ??
+                       throw new Exception($"incorrect credentials");
+
+        var token = TokenService.GenerateToken(authUser);
+
+        return new { user = authUser, token = token };
+    }
 }
-
-

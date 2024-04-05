@@ -19,8 +19,8 @@ public static class TokenService
             Subject = new ClaimsIdentity([
                 new Claim(ClaimTypes.Name, user.Name.ToString()),
                 new Claim(ClaimTypes.Surname, user.Surname.ToString()),
-                new Claim(ClaimTypes.Role, role),
-                new Claim(ClaimTypes.Email, user.Email.ToString())
+                new Claim(ClaimTypes.Email, user.Email.ToString()),
+                new Claim(ClaimTypes.Role, role)
             ]),
             Expires = DateTime.UtcNow.AddDays(1),
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
