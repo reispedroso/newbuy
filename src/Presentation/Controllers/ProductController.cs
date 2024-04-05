@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using newbuy.Domain.Models;
 using newbuy.Domain.Interfaces;
@@ -10,6 +11,7 @@ namespace newbuy.Presentations.Controllers;
     private readonly IProductInterface _productRepository = productRepository;
 
     [HttpPost("addproduct")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> AddProduct(Product product)
     {
         try

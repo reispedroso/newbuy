@@ -57,6 +57,6 @@ public class UserController(IUserInterface userRepository) : ControllerBase
 
         var token = TokenService.GenerateToken(authUser);
 
-        return new { user = authUser, token = token };
+        return token;
     }
 }
