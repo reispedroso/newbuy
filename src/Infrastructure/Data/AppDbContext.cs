@@ -8,8 +8,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 {
     public DbSet<User> Users { get; set; }
     public DbSet<UserType> UserType { get; set; }
-    public DbSet<Item> Items { get; set; }
-    public DbSet<ItemType> ItemType { get; set; }
+    public DbSet<Product> Product { get; set; }
+    public DbSet<ProductType> ProductType { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -24,14 +24,14 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(u => u.UserTypeId);
 
-        modelBuilder.Entity<Item>()
-                    .Property(u => u.ItemTypeId)
-                    .HasColumnName("ItemTypeId");
+        modelBuilder.Entity<Product>()
+                    .Property(u => u.Id)
+                    .HasColumnName("ProductTypeId");
 
-        modelBuilder.Entity<Item>()
-            .HasOne(u => u.ItemType)
+        modelBuilder.Entity<Product>()
+            .HasOne(u => u.ProductType)
             .WithMany()
-            .HasForeignKey(u => u.ItemTypeId);
+            .HasForeignKey(u => u.ProductTypeId);
 
     }
 

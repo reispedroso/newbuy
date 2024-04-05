@@ -13,7 +13,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<PasswordHash>();
 builder.Services.AddSingleton<DateTimeCorrection>();
 
-builder.Services.AddScoped<UserInterface, UserRepository>();
+builder.Services.AddScoped<IUserInterface, UserRepository>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

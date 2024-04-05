@@ -6,7 +6,7 @@ using newbuy.Infrastructure.Data;
 
 namespace newbuy.Infrastructure.Repositories;
 
-public class UserRepository(AppDbContext context) : UserInterface 
+public class UserRepository(AppDbContext context) : IUserInterface 
 {
     private readonly AppDbContext _context = context;
     private readonly PasswordHash _passwordHash = new();
