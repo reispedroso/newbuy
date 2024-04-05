@@ -24,8 +24,8 @@ public class UserRepository(AppDbContext context) : IUserInterface
             User newUser = new()
             {
                 Id = Guid.NewGuid(),
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                Name = user.Name,
+                Surname = user.Surname,
                 Email = user.Email,
                 Password = _passwordHash.HashPassword(user.Password),
                 CreatedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow),
@@ -68,8 +68,8 @@ public class UserRepository(AppDbContext context) : IUserInterface
     {
           User userToUpdate = GetUserById(id).Result;
 
-        userToUpdate.FirstName = user.FirstName;
-        userToUpdate.LastName = user.LastName;
+        userToUpdate.Name = user.Name;
+        userToUpdate.Surname = user.Surname;
         userToUpdate.Email = user.Email;
         userToUpdate.Password = _passwordHash.HashPassword(user.Password!);
         userToUpdate.UpdatedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
