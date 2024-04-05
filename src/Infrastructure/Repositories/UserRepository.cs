@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using newbuy.App.Services;
 using newbuy.Domain.Interfaces;
 using newbuy.Domain.Models;
 using newbuy.Infrastructure.Data;
@@ -8,6 +9,8 @@ namespace newbuy.Infrastructure.Repositories;
 public class UserRepository(AppDbContext context) : UserInterface 
 {
     private readonly AppDbContext _context = context;
+    private readonly PasswordHash _passwordHash = new();
+    private readonly DateTimeCorrection _timeCorrection = new();
 
     public async Task CreateUser(User user)
     {
@@ -24,8 +27,8 @@ public class UserRepository(AppDbContext context) : UserInterface
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                Password = user.Password!,
-                CreatedAt = DateTime.UtcNow,
+                Password = _passwordHash.HashPassword(user.Password),
+                CreatedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow),
                 UserTypeId = user.UserTypeId
             };
             await _context.Users.AddAsync(newUser);
@@ -37,27 +40,62 @@ public class UserRepository(AppDbContext context) : UserInterface
         }
     }
 
-    public Task<IEnumerable<User>> GetAllUsers()
+    public async Task<IEnumerable<User>> GetAllUsers()
     {
-        throw new NotImplementedException();
+        List<User> users = await _context.Users.ToListAsync();
+
+        if (users == null)
+        {
+            throw new Exception("Users not found");
+        }
+
+        return users;
     }
 
-    public Task<User> GetUserById(Guid id)
+    public async Task<User> GetUserById(Guid id)
     {
-        throw new NotImplementedException();
+        var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (user == null)
+        {
+            throw new Exception("User not found");
+        }
+
+        return user;
     }
 
-    public Task UpdateUser(Guid id, User user)
+    public async Task UpdateUser(Guid id, User user)
     {
-        throw new NotImplementedException();
+          User userToUpdate = GetUserById(id).Result;
+
+        userToUpdate.FirstName = user.FirstName;
+        userToUpdate.LastName = user.LastName;
+        userToUpdate.Email = user.Email;
+        userToUpdate.Password = _passwordHash.HashPassword(user.Password!);
+        userToUpdate.UpdatedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
+        userToUpdate.UserTypeId = user.UserTypeId;
+        
+        _context.Users.Update(userToUpdate);
+        await _context.SaveChangesAsync();
     }
 
-    public Task DeleteUser(Guid id)
+    public async Task DeleteUser(Guid id)
     {
-        throw new NotImplementedException();
+       
+        User userToDelete = GetUserById(id).Result;
+
+        userToDelete.DeletedAt = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow);
+        await _context.SaveChangesAsync();
     }
-    public Task<User> AuthenticateUser(string email, string password)
+    public async Task<User> AuthenticateUser(string email, string password)
     {
-        throw new NotImplementedException();
+        
+        var user =  await _context.Users.Include(u => u.UserType).FirstOrDefaultAsync(u => u.Email == email) ?? throw new Exception("Usuário não encontrado");
+        if (!_passwordHash.VerifyPassword(password, user.Password!))
+        {
+            throw new Exception("Incorrect password");
+        }
+
+        return user;
     }
 }
