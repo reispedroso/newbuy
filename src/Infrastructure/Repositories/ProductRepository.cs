@@ -41,11 +41,14 @@ public class ProductRepository(AppDbContext context) : IProductInterface
     {
         if(string.IsNullOrEmpty(name)) { throw new Exception("Name is empty"); }
 
-        Product productByName = await _context.Product.FirstOrDefaultAsync(p => p.Name == name)
-        ?? throw new Exception($"Product with name: {name} - not found");
+        string nameLower = name.ToLowerInvariant();
+
+        Product productByName = await _context.Product.Where(p => EF.Functions.Like(p.Name.ToLower(), nameLower)).FirstOrDefaultAsync()
+                                ?? throw new Exception($"Product with name: {name} - not found");
 
         return productByName;
     }
+
 
     public async Task<List<Product>> GetAllProducts()
     {
@@ -64,21 +67,23 @@ public class ProductRepository(AppDbContext context) : IProductInterface
         return productsByTypeId;
     }
 
-    public async Task<List<Product>> GetProductsByNameType(string typeName)
+    public async Task<List<Product>> GetProductsByTypeName(string typeName)
     {
         if(string.IsNullOrEmpty(typeName)) { throw new Exception("Type name is empty"); }
 
-        List<Product> productsByNameType = await _context.Product.Where(p => p.ProductType!.TypeName == typeName).ToListAsync()
+        string nameLower = typeName.ToLowerInvariant();
+
+        List<Product> productsByNameType = await _context.Product.Where(p => EF.Functions.Like(typeName.ToLower(), nameLower)).ToListAsync()
         ?? throw new Exception($"Products with type name: {typeName} - not found");
 
         return productsByNameType;
     }
 
-    public async Task<bool> UpdateProduct(Product product)
+    public async Task<bool> UpdateProduct(Guid id, Product product)
     {
         if(product == null) { throw new Exception("Product is null"); }
 
-        Product productToUpdate = await GetProductById(product.Id);
+        Product productToUpdate = await GetProductById(id);
 
         productToUpdate.Name = product.Name;
         productToUpdate.ProductTypeId = product.ProductTypeId;

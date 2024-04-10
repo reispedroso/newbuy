@@ -25,7 +25,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasForeignKey(u => u.UserTypeId);
 
         modelBuilder.Entity<Product>()
-                    .Property(u => u.Id)
+                    .Property(u => u.ProductTypeId)
                     .HasColumnName("ProductTypeId");
 
         modelBuilder.Entity<Product>()
