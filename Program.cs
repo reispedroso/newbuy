@@ -17,8 +17,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<PasswordHash>();
 builder.Services.AddSingleton<DateTimeCorrection>();
 
-builder.Services.AddScoped<IUserInterface, UserRepository>();
-builder.Services.AddScoped<IProductInterface, ProductRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<UserController>();
@@ -49,6 +50,13 @@ builder.Services.AddAuthentication(x =>
 
 
 var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 
 app.MapControllers();
 

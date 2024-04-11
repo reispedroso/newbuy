@@ -2,7 +2,7 @@ using newbuy.Domain.Models;
 
 namespace newbuy.Domain.Interfaces;
 
-public interface IProductInterface
+public interface IProductRepository
 {
     Task<Product> AddProductToDb(Product product);
     Task<Product> GetProductById(Guid id);
