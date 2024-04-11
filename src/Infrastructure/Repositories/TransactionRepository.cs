@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using newbuy.App.Services;
 using newbuy.Domain.Interfaces;
 using newbuy.Domain.Models;
 using newbuy.Infrastructure.Data;
 
 namespace newbuy.Infrastructure.Repositories;
-public class TransactionRepository(AppDbContext context) : ITransactionRepository
+public class TransactionRepository(AppDbContext context, DateTimeCorrection timeCorrection) : ITransactionRepository
 {
     private readonly AppDbContext _context = context;
+    private readonly DateTimeCorrection _timeCorrection = timeCorrection;
 
     public async Task<Transaction> AddTransaction(Guid userId, Guid productId)
     {
@@ -19,7 +21,7 @@ public class TransactionRepository(AppDbContext context) : ITransactionRepositor
             Id = Guid.NewGuid(),
             UserId = userId,
             ProductId = productId,
-            PurchaseDate = DateTime.UtcNow
+            PurchaseDate = _timeCorrection.GetCorrectedDateTime(DateTime.UtcNow)
         };
 
         _context.Transactions.Add(transaction);

@@ -1,7 +1,9 @@
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace newbuy.Domain.Models;
 
+[Table("transactions")]
 public class Transaction
 {
     public Guid Id { get; set; }
