@@ -10,6 +10,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<UserType> UserType { get; set; }
     public DbSet<Product> Product { get; set; }
     public DbSet<ProductType> ProductType { get; set; }
+     public DbSet<Transaction> Transactions { get; set; }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -32,6 +34,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .HasOne(u => u.ProductType)
             .WithMany()
             .HasForeignKey(u => u.ProductTypeId);
+
+            modelBuilder.Entity<Transaction>()
+                .HasKey(t => t.Id);
+
 
     }
 

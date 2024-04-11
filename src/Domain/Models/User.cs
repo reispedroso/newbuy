@@ -7,11 +7,11 @@ namespace newbuy.Domain.Models;
 public class User
 {
     public Guid Id { get; set; }
-    
-    [StringLength(50)] 
+
+    [StringLength(50)]
     public string? Name { get; set; }
 
-    [StringLength(50)] 
+    [StringLength(50)]
     public string? Surname { get; set; }
 
     [StringLength(100)]
@@ -22,4 +22,6 @@ public class User
     public DateTime? DeletedAt { get; set; }
     public UserType? UserType { get; set; }
     public Guid UserTypeId { get; set; }
+
+
 }

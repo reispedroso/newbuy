@@ -2,7 +2,7 @@
 using newbuy.Domain.Models;
 
 namespace newbuy.Domain.Interfaces;
-public interface IUserInterface
+public interface IUserRepository
 {
     Task CreateUser(User user);
     Task<User> GetUserById(Guid id);

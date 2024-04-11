@@ -6,7 +6,7 @@ using newbuy.Infrastructure.Data;
 
 namespace newbuy.Infrastructure.Repositories;
 
-public class ProductRepository(AppDbContext context) : IProductInterface
+public class ProductRepository(AppDbContext context) : IProductRepository
 {
     private readonly AppDbContext _context = context;
     private readonly DateTimeCorrection _timeCorrection = new();
