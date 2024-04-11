@@ -6,9 +6,14 @@ using newbuy.Domain.Interfaces;
 namespace newbuy.Presentations.Controllers;
 
 [Route("api/[controller]")]
-[ApiController]public class ProductController(IProductInterface productRepository) : ControllerBase
+[ApiController]
+public class ProductController
+(
+ IProductRepository productRepository, ITransactionRepository transactionRepository
+) : ControllerBase
 {
-    private readonly IProductInterface _productRepository = productRepository;
+    private readonly IProductRepository _productRepository = productRepository;
+    private readonly ITransactionRepository _transactionRepository = transactionRepository;
 
     [HttpPost("addproduct")]
     [Authorize(Roles = "Admin")]
@@ -114,4 +119,28 @@ namespace newbuy.Presentations.Controllers;
             throw;
         }
     }
+
+   [HttpPost("buyproduct/{productId}")]
+        [Authorize]
+        public async Task<IActionResult> BuyProduct(Guid productId)
+        {
+            try
+            {
+                // Obter o usuário atualmente autenticado
+                var userId = Guid.Parse(User.Identity.Name);
+
+                // Obter o produto pelo ID
+                var product = await _productRepository.GetProductById(productId);
+
+                // Adicionar uma transação de compra
+                await _transactionRepository.AddTransaction(userId, productId);
+
+                return Ok($"Product '{product.Name}' purchased successfully.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+    
 }

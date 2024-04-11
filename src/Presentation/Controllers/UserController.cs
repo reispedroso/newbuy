@@ -8,9 +8,9 @@ namespace newbuy.Presentations.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class UserController(IUserInterface userRepository) : ControllerBase
+public class UserController(IUserRepository userRepository) : ControllerBase
 {
-    private readonly IUserInterface _userRepository = userRepository;
+    private readonly IUserRepository _userRepository = userRepository;
 
     [HttpPost("createuser")]
     public async Task<IActionResult> CreateUser([FromBody] User user)
